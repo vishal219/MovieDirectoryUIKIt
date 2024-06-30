@@ -56,7 +56,7 @@ class ExpandableHeaderView: UITableViewHeaderFooterView {
     }
 
     func setCollapsed(collapsed: Bool) {
-        let imageName = collapsed ? "arrow.right" : "arrow.down"
+        let imageName = collapsed ? AppImages.right_arrow: AppImages.down_arrow
         arrowImageView.image = UIImage(named: imageName)?.withTintColor(.black)
     }
 }

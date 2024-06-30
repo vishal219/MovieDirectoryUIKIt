@@ -33,6 +33,7 @@ class MDHomeListMovieCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    ///setup user interface
     func setupUI() {
         contentView.backgroundColor = .white
         
@@ -41,16 +42,19 @@ class MDHomeListMovieCell: UITableViewCell {
         })
     }
     
+    
+    /// configure cell for given movie
+    /// - Parameter movie: Object describing movie details
     func configure(_ movie: MovieElement) {
         moviesImageView.sd_setImage(with: URL(string: movie.poster))
         
-        movieLanguageTextLabel.text = "Language:"
-        movieYearLabel.text  = "Year:"
+        movieLanguageTextLabel.text = AppTexts.language
+        movieYearLabel.text  = AppTexts.year
         
         movieTitleLabel.text = movie.title
         movieLanguageContentLabel.text = movie.language
         if let last = movie.year.last, last == "–" {
-            movieYearContentLabel.text = movie.year + "Present"
+            movieYearContentLabel.text = movie.year + AppTexts.present
         } else {
             movieYearContentLabel.text = movie.year
         }

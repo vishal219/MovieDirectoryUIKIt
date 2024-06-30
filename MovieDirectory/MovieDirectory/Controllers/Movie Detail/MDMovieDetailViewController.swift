@@ -68,7 +68,7 @@ class MDMovieDetailViewController: UIViewController {
             }))
         }
         
-        ratingButton.menu = UIMenu(title: "Ratings", image: nil, identifier: nil, options: [], children: menuItems)
+        ratingButton.menu = UIMenu(title: AppTexts.ratings, image: nil, identifier: nil, options: [], children: menuItems)
         ratingButton.showsMenuAsPrimaryAction = true
         
         ratingValueLabel.text = ratingSources.first?.value
@@ -76,7 +76,7 @@ class MDMovieDetailViewController: UIViewController {
         
     }
     
-    
+    ///setup User Interface
     func setupUI() {
         view.backgroundColor = .white
         [plotView,castView,releasedView,genreView,ratingView].forEach({ view in
@@ -96,13 +96,12 @@ class MDMovieDetailViewController: UIViewController {
            // view?.font = UIFont().withSize(16.0)
         })
         
-        plotLabel.text = "Plot"
-        castLabel.text = "Cast"
-        releasedLabel.text = "Released"
-        genreLabel.text = "Genre"
-        ratingLabel.text = "Rating"
+        plotLabel.text = AppTexts.plot
+        castLabel.text = AppTexts.cast
+        releasedLabel.text = AppTexts.released
+        genreLabel.text = AppTexts.genre
+        ratingLabel.text = AppTexts.rating
         
-        ratingButton.setTitle("IMDB", for: .normal)
         
     }
 

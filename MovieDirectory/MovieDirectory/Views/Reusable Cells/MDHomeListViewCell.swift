@@ -29,14 +29,17 @@ class MDHomeListViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    ///setup user interface
     func setupUI() {
         contentView.backgroundColor = .white
         titleLabel.textColor = .black
     }
     
+    /// configure cell for given string
+    /// - Parameter value: list value to be shown
     func configure(with value: String) {
         if value.last == "–" {
-            titleLabel.text = value + " Present"
+            titleLabel.text = value + " \(AppTexts.present)"
         } else {
             titleLabel.text = value
         }
