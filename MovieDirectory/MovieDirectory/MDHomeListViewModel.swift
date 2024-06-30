@@ -54,7 +54,31 @@ class MDHomeListViewModel {
                     movies = try JSONDecoder().decode([MovieElement].self, from: data)
                     
                     
-                    yearList = Array(Set(movies.map{$0.year}))
+                    var items: [String] = []
+                    let years = movies.map { $0.year }
+                    let currentYear = Calendar.current.component(.year, from: Date())
+                    for item in years {
+                        if item.contains("–") {
+                            let parts = item.split(separator: "–").map { String($0) }
+                            if parts.count == 2 {
+                                let startYear = Int(parts[0]) ?? 0
+                                let endYear = (parts[1].isEmpty) ? currentYear : (Int(parts[1]) ?? currentYear)
+                                
+                                for year in startYear...endYear {
+                                    items.append("\(year)")
+                                }
+                            } else {
+                                let startYear = Int(parts[0]) ?? 0
+                                
+                                for year in startYear...currentYear {
+                                    items.append("\(year)")
+                                }
+                            }
+                        } else {
+                            items.append(item)
+                        }
+                    }
+                    yearList = Array(Set(items))
                     
                     
                     
@@ -81,32 +105,34 @@ class MDHomeListViewModel {
     func getListFor(item: String,element: FilterCategory) -> [MovieElement]{
         switch element {
         case .year:
-            
-            let currentYear = Calendar.current.component(.year, from: Date())
-                    var items: [String] = []
-
-                    if item.contains("–") {
-                        let parts = item.split(separator: "–").map { String($0) }
-                        if parts.count == 2 {
-                            let startYear = Int(parts[0]) ?? 0
-                            let endYear = (parts[1].isEmpty) ? currentYear : (Int(parts[1]) ?? currentYear)
-                            
-                            for year in startYear...endYear {
-                                items.append("\(year)")
-                            }
-                        } else {
-                            let startYear = Int(parts[0]) ?? 0
-                            
-                            for year in startYear...currentYear {
-                                items.append("\(year)")
-                            }
+            var filteredMovies: [MovieElement] = []
+            for movie in movies {
+                var items: [String] = []
+                let currentYear = Calendar.current.component(.year, from: Date())
+                if movie.year.contains("–") {
+                    let parts = movie.year.split(separator: "–").map { String($0) }
+                    if parts.count == 2 {
+                        let startYear = Int(parts[0]) ?? 0
+                        let endYear = (parts[1].isEmpty) ? currentYear : (Int(parts[1]) ?? currentYear)
+                        
+                        for year in startYear...endYear {
+                            items.append("\(year)")
                         }
                     } else {
-                        items.append(item)
+                        let startYear = Int(parts[0]) ?? 0
+                        
+                        for year in startYear...currentYear {
+                            items.append("\(year)")
+                        }
                     }
-            return movies.filter {
-                items.contains($0.year)
+                } else {
+                    items.append(movie.year)
+                }
+                if items.contains(item) {
+                    filteredMovies.append(movie)
+                }
             }
+            return filteredMovies
         case .genre:
             return movies.filter({$0.genre.components(separatedBy: ", ").contains(item)})
         case .directors:

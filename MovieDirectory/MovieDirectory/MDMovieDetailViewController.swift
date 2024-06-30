@@ -57,6 +57,23 @@ class MDMovieDetailViewController: UIViewController {
         releasedValueLabel.text = movie.released
         genreValueLabel.text = movie.genre
         
+        let ratingSources = movie.ratings
+        var menuItems : [UIAction] = []
+        
+        for ratingSource in ratingSources {
+            menuItems.append(UIAction(title: ratingSource.source.rawValue,handler: { [weak self] _ in
+                guard let self = self else { return }
+                ratingValueLabel.text = ratingSource.value
+                ratingButton.setTitle(ratingSource.source.rawValue, for: .normal)
+            }))
+        }
+        
+        ratingButton.menu = UIMenu(title: "Ratings", image: nil, identifier: nil, options: [], children: menuItems)
+        ratingButton.showsMenuAsPrimaryAction = true
+        
+        ratingValueLabel.text = ratingSources.first?.value
+        ratingButton.setTitle(ratingSources.first?.source.rawValue, for: .normal)
+        
     }
     
     
@@ -66,16 +83,16 @@ class MDMovieDetailViewController: UIViewController {
             view?.backgroundColor = .clear
         })
         
-        [titlelabel,plotValueLabel,castValueLabel,releasedValueLabel,genreValueLabel].forEach({ view in
+        [titlelabel,plotValueLabel,castValueLabel,releasedValueLabel,genreValueLabel,ratingLabel,ratingValueLabel].forEach({ view in
             view?.numberOfLines = 0
             view?.textColor = .black
-            //view?.font = UIFont().withSize(14.0)
         })
         
       //  titlelabel.font = UIFont().withSize(18.0)
         
         [plotLabel,castLabel,releasedLabel,genreLabel].forEach({ view in
             view?.numberOfLines = 0
+            view?.textColor = .black
            // view?.font = UIFont().withSize(16.0)
         })
         
@@ -84,6 +101,8 @@ class MDMovieDetailViewController: UIViewController {
         releasedLabel.text = "Released"
         genreLabel.text = "Genre"
         ratingLabel.text = "Rating"
+        
+        ratingButton.setTitle("IMDB", for: .normal)
         
     }
 

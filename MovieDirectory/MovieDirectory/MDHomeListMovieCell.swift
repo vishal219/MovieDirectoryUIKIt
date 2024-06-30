@@ -49,6 +49,11 @@ class MDHomeListMovieCell: UITableViewCell {
         
         movieTitleLabel.text = movie.title
         movieLanguageContentLabel.text = movie.language
-        movieYearContentLabel.text = movie.year
+        if let last = movie.year.last, last == "–" {
+            movieYearContentLabel.text = movie.year + "Present"
+        } else {
+            movieYearContentLabel.text = movie.year
+        }
+        
     }
 }

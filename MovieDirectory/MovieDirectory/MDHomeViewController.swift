@@ -45,6 +45,7 @@ class MDHomeViewController: UIViewController {
         titleTextLabel.font = UIFont.boldSystemFont(ofSize: 15.0)
         searchBar.barTintColor = .white
         searchBar.delegate = self
+        searchBar.searchTextField.textColor = .black
     }
     
     func setupTableView() {
@@ -162,31 +163,42 @@ extension MDHomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var list: [MovieElement] = []
-        var header: String  = ""
-        switch sections[indexPath.section] {
-        case .year:
-            list = viewModel.getListFor(item: viewModel.yearList[indexPath.row], element: .year)
-            header = viewModel.yearList[indexPath.row]
-        case .genre:
-            list = viewModel.getListFor(item: viewModel.genreList[indexPath.row], element: .genre)
-            header = viewModel.genreList[indexPath.row]
-        case .directors:
-            list = viewModel.getListFor(item: viewModel.directorList[indexPath.row], element: .directors)
-            header = viewModel.directorList[indexPath.row]
-        case .actors:
-            list = viewModel.getListFor(item: viewModel.actorList[indexPath.row], element: .actors)
-            header = viewModel.actorList[indexPath.row]
-        case .movies:
-            return
+        if !isSearching {
+            var list: [MovieElement] = []
+            var header: String  = ""
+            switch sections[indexPath.section] {
+            case .year:
+                list = viewModel.getListFor(item: viewModel.yearList[indexPath.row], element: .year)
+                header = viewModel.yearList[indexPath.row]
+            case .genre:
+                list = viewModel.getListFor(item: viewModel.genreList[indexPath.row], element: .genre)
+                header = viewModel.genreList[indexPath.row]
+            case .directors:
+                list = viewModel.getListFor(item: viewModel.directorList[indexPath.row], element: .directors)
+                header = viewModel.directorList[indexPath.row]
+            case .actors:
+                list = viewModel.getListFor(item: viewModel.actorList[indexPath.row], element: .actors)
+                header = viewModel.actorList[indexPath.row]
+            case .movies:
+                if let vc = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "MDMovieDetailViewController") as? MDMovieDetailViewController {
+                    vc.movie = viewModel.movies[indexPath.row]
+                    self.navigationController?.pushViewController(vc, animated: true)
+                    return
+                }
+            }
+            
+            if let vc = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "MDMoviesListViewController") as? MDMoviesListViewController {
+                vc.list = list
+                vc.titleValue = header
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        } else {
+            if let vc = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "MDMovieDetailViewController") as? MDMovieDetailViewController {
+                vc.movie = viewModel.filteredMovies[indexPath.row]
+                self.navigationController?.pushViewController(vc, animated: true)
+                return
+            }
         }
-        
-        if let vc = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "MDMoviesListViewController") as? MDMoviesListViewController {
-            vc.list = list
-            vc.titleValue = header
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
-        
     }
     
     
